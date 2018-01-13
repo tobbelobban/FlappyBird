@@ -2,11 +2,13 @@
 var playerComp;
 var score;
 var obstacles;
+var gameSpeed = -3;
+var framesToGo = 37;
 
 function startGame() {
   obstacles = [];
   gameArea.start();
-  playerComp = new component(30, 30, "red", 10, 120, "player", true);
+  playerComp = new component(15, 15, "red", 10, 120, "player", true);
   playerComp.gravity = 0.05;
   score = new component("30px", "Consolas", "black", 280, 40, "text");
 }
@@ -112,7 +114,7 @@ function updateGameArea() {
 
   var x, y;
 
-  if(gameArea.frameCount == 1 || everyinterval(150)) {
+  if(gameArea.frameCount == 1 || everyinterval(framesToGo)) {
     x = gameArea.canvas.width;
     minHeight = 20;
     maxHeight = 200;
@@ -121,9 +123,9 @@ function updateGameArea() {
     maxGap = 200;
     gap = Math.floor(Math.random()*(maxGap-minGap+1)+minGap);
     obstacles.push(new component(10, height, "green", x, 0));
-    obstacles[obstacles.length - 1].speedX = -1;
+    obstacles[obstacles.length - 1].speedX = gameSpeed;
     obstacles.push(new component(10, x - height - gap, "green", x, height + gap));
-    obstacles[obstacles.length - 1].speedX = -1;
+    obstacles[obstacles.length - 1].speedX = gameSpeed;
   }
   for(i = 0; i < obstacles.length; i++) {
     obstacles[i].newPos();
@@ -135,6 +137,9 @@ function updateGameArea() {
     playerComp.gravity = -0.2;
   } else {
     playerComp.gravity = 0.05;
+  }
+  if(gameArea.key && gameArea.key == 32) {
+    playerComp.gravity = 2;
   }
   playerComp.newPos();
   playerComp.update();
