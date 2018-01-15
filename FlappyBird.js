@@ -2,8 +2,9 @@
 var playerComp;
 var score;
 var obstacles;
-var gameSpeed = -3;
-var framesToGo = 37;
+var gameSpeed = -1;
+var framesToGo = 150;
+var clearWalls = false;
 
 function startGame() {
   obstacles = [];
@@ -18,7 +19,7 @@ var gameArea = {
   start : function() {
     this.canvas.width = 480;
     this.canvas.height = 270;
-    this.frameCount = 0;
+    this.frameCount = 1;
     this.context = this.canvas.getContext("2d");
     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     this.interval = setInterval(updateGameArea, 20);
@@ -114,7 +115,18 @@ function updateGameArea() {
 
   var x, y;
 
-  if(gameArea.frameCount == 1 || everyinterval(framesToGo)) {
+  if(gameArea.frameCount % 1000 === 0) {
+    clearWalls = true;
+  }
+
+  if(clearWalls && obstacles[obstacles.length-1].x+obstacles[obstacles.length-1].width < 0) {
+    clearWalls = false;
+    obstacles = [];
+    gameSpeed--;
+    framesToGo = Math.floor(framesToGo / 2);
+  }
+
+  if((gameArea.frameCount == 1 || everyinterval(framesToGo)) && !clearWalls) {
     x = gameArea.canvas.width;
     minHeight = 20;
     maxHeight = 200;
